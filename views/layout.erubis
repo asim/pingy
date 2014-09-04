@@ -15,9 +15,8 @@ table.tbl th.desc { background: white; border-style: solid solid none solid; tex
 </style>
 </head>
 <body>
-<h1><a href="/pingy/">Pingy Stats</a></h1>
+<h1><a href="/">Pingy</a></h1>
 <hr width="100%" class="hr">
-<h3>Info</h3>
 <ul class="ul">
 <li><strong>pid</strong> <%= @info[:pid] %></li>
 <li><strong>uptime</strong> <%= @info[:uptime] %></li>

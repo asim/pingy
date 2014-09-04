@@ -1,6 +1,8 @@
 # redis settings
-host: "127.0.0.1"
-port: 6379
+host: "redistogo:9756a3e2c88d0d520e5a67b7fb5ee9f8@grouper.redistogo.com"
+port: 10340
+
+url: "127.0.0.1:6379"
 
 # dc settings
 dc: "default"

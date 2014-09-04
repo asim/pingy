@@ -1,4 +1,4 @@
-<% if @hosts.empty? -%>
+<% if @hosts.nil? -%>
 <p>There are no hosts currently monitored</p>
 <% else %>
 <table class="tbl" width="100%">
@@ -9,17 +9,17 @@
     <th>uptime</th>
     <th>poll</th>
     <th>host status</th>
-    <th>service status</th>    
+    <th>service status</th>
   </tr>
 <% @hosts.each do |ip,details| -%>
   <tr class="<%= details[:status] %>">
-    <td align="center"><a href="host?ip=<%= ip %>"><%= details[:hostname] %></a></td>
+    <td align="center"><a href="/host/<%= ip %>"><%= details['hostname'] %></a></td>
     <td align="center"><%= ip %></td>
-    <td align="center"><%= details[:last_update].strftime("%H:%M:%S %d-%m-%Y") %></td>
-    <td align="right"><%= details[:uptime] %></td>
-    <td align="right"><%= details[:poll] %></td>
-    <td align="right"><%= details[:host_status] %></td>
-    <td align="right"><%= details[:service_status] %></td>
+    <td align="center"><%= Date.parse(details['last_update']).strftime("%H:%M:%S %d-%m-%Y") %></td>
+    <td align="right"><%= details['uptime'] %></td>
+    <td align="right"><%= details['poll'] %></td>
+    <td align="right"><%= details['host_status'] %></td>
+    <td align="right"><%= details['service_status'] %></td>
   </tr>
 <% end -%>
 </table>

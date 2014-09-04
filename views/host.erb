@@ -11,27 +11,29 @@ No host data
     <th>host status</th>
     <th>service status</th>
   </thead>
-  <tr class="<%= @details[:host_status] %>">
-    <td align="center"><a href="host?ip=<%= @ip %>"><%= @details[:hostname] %></a></td>
+  <tr class="<%= @details['host_status'] %>">
+    <td align="center"><a href="/host/<%= @ip %>"><%= @details['hostname'] %></a></td>
     <td align="center"><%= @ip %></td>
-    <td align="center"><%= @details[:last_update].strftime("%H:%M:%S %d-%m-%Y") %></td>
-    <td align="right"><%= @details[:uptime] %></td>
-    <td align="right"><%= @details[:poll] %></td>
-    <td align="right"><%= @details[:host_status] %></td>
-    <td align="right"><%= @details[:service_status] %></td>
+    <td align="center"><%= Date.parse(@details['last_update']).strftime("%H:%M:%S %d-%m-%Y") %></td>
+    <td align="right"><%= @details['uptime'] %></td>
+    <td align="right"><%= @details['poll'] %></td>
+    <td align="right"><%= @details['host_status'] %></td>
+    <td align="right"><%= @details['service_status'] %></td>
   </tr>
 </table>
 
-<% @host["services"]["service"].each do |service| -%>
+<br />
+
+<% @host['service'].each do |service| -%>
 <table class="tbl" width="100%">
-  <tr class="<%= service["status"] == "0" ? 'up' : 'down' %>">
-    <th align="left"><%= service["name"] %></th>
-    <th align="left"><%= service["status"] == "0" ? "up" : "down" %></th>
+  <tr class="<%= service['status'] == "0" ? 'up' : 'down' %>">
+    <th align="left"><%= service['name'] %></th>
+    <th align="left"><%= service['status'] == '0' ? 'up' : 'down' %></th>
   </tr>
 
   <% service.each do |name,values| -%>
-  <% if name == "name"; next; end %>
-  <% if values.class.to_s == "Hash" %>
+  <% if name == 'name'; next; end %>
+  <% if values.class.to_s == 'Hash' %>
   <tr><td><%= name %></td><td></td></tr>
   <% values.each do |k,v| -%>
   <tr>
@@ -39,7 +41,7 @@ No host data
     <td><%= v %></td>
   </tr>
   <% end -%>
-  <% elsif values.class.to_s == "Array" %>
+  <% elsif values.class.to_s == 'Array' %>
   <tr><td><%= name %></td><td></td></tr>
   <% values.each do |v| -%>
   <tr>
@@ -50,7 +52,7 @@ No host data
   <% else %>
   <tr>
     <td><%= name %></td>
-    <td><%= values %></td>
+    <td><%= label(name, values) %></td>
   <% end %>
   </tr>
   <% end -%>

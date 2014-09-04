@@ -1,15 +1,19 @@
 class Pingy
   def initialize(settings={})
     @settings = {
-      :host => "127.0.0.1", # redis host
+      :host => '127.0.0.1', # redis host
       :port => 6379,        # redis port
-      :dc => "default"      # datacenter
-    }  
+      :dc => 'default',     # datacenter
+      :url => 'redis://127.0.0.1:6379'
+    }
 
     settings.each { |k,v| @settings[k.to_sym] = v }
 
-    @info = { :pid => Process.pid, :started_at => Time.now, :uptime => "0 seconds" }    
-    @db = Redis.new(:host => @settings[:host], :port => @settings[:port])
+    redisUri = ENV['REDISTOGO_URL'] || @settings[:url]
+    uri = URI.parse(redisUri)
+
+    @info = { :pid => Process.pid, :started_at => Time.now, :uptime => '0 seconds' }
+    @db = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
 
     # db lookup methods
     @m = {
@@ -20,16 +24,20 @@ class Pingy
 
   def add_host(ip, stats={}, data={})
     host = get_host(ip)
-    if host.has_key?(:service_status)
+    if !host.nil? && host.has_key?(:service_status)
       stats[:service_status] = host[:service_status]
     end
 
-    @db.hset(@m[:hosts], ip, Marshal.dump(stats))
+    @db.hset(@m[:hosts], ip, stats.to_json)
     add_host_data(ip, data)
   end
 
   def add_host_data(ip, data={})
-    @db.hset(@m[:host_data], ip, Marshal.dump(data))
+    @db.hset(@m[:host_data], ip, data.to_json)
+  end
+
+  def log_xml(ip, xml)
+    @db.hset('xml_requests', ip, xml)
   end
 
   def del_host(ip)
@@ -45,23 +53,20 @@ class Pingy
     if @db.exists(@m[:hosts])
       all = {}
       @db.hgetall(@m[:hosts]).each do |host,stats|
-        all[host] = Marshal.restore(stats)
+        all[host] = JSON.parse(stats)
       end
 
       all
     end
   end
 
-  def get_hosts
-    @db.hkeys(@m[:hosts])
-  end
-
   def get_host(ip)
-    Marshal.restore(@db.hget(@m[:hosts], ip)) if @db.hexists(@m[:hosts], ip)
+    # Redis.hget #=> Gets the value of a hash field. #Redis.hexists #=> Determine if a hash field exists.
+    JSON.parse(@db.hget(@m[:hosts], ip)) if @db.hexists(@m[:hosts], ip)
   end
 
   def get_host_data(ip)
-    Marshal.restore(@db.hget(@m[:host_data], ip)) if @db.hexists(@m[:host_data], ip)
+    JSON.parse(@db.hget(@m[:host_data], ip)) if @db.hexists(@m[:host_data], ip)
   end
 
   def get_hosts
@@ -73,7 +78,7 @@ class Pingy
     @info
   end
 
-  def log(msg) 
+  def log(msg)
     puts "#{Time.now} - #{msg}"
   end
 
@@ -89,12 +94,12 @@ class Pingy
       # For each host check the status against last updated and poll times.
       # If it exceeds poll time then ping the host to see if its actually down.
       log("checking #{stats[:hostname]} status")
-      if (time - stats[:last_update]) > stats[:poll].to_i # add 10 seconds 
+      if (time - stats[:last_update]) > stats[:poll].to_i # add 10 seconds
 	log("#{stats[:hostname]} is down")
         stats[:host_status] = "down"
         add_host(host, stats)
       end
-    end    
+    end
   end
 
   def set_service_status
@@ -111,9 +116,8 @@ class Pingy
 
   def update(ip, xml)
     data = Crack::XML.parse(xml)
-
-    if data.has_key?("monit")
-      values = { 
+    if data.has_key?('monit')
+      values = {
         :hostname => data["monit"]["server"]["localhostname"],
         :uptime => data["monit"]["server"]["uptime"],
         :poll => data["monit"]["server"]["poll"],
@@ -122,7 +126,8 @@ class Pingy
         :service_status => ""
       }
 
-      add_host(ip, values, data["monit"])
+      add_host(ip, values, data['monit'])
+      log_xml(ip, xml)
     end
   end
 

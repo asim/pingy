@@ -1,0 +1,5 @@
+.idea/
+.ruby-gemset
+.ruby-version
+
+dump.rdb
