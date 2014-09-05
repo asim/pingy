@@ -14,7 +14,7 @@ No host data
   <tr class="<%= @details['host_status'] %>">
     <td align="center"><a href="/host/<%= @ip %>"><%= @details['hostname'] %></a></td>
     <td align="center"><%= @ip %></td>
-    <td align="center"><%= Date.parse(@details['last_update']).strftime("%H:%M:%S %d-%m-%Y") %></td>
+    <td align="center"><%= Time.parse(@details['last_update']).strftime("%Y-%m-%d %H:%M:%S") %></td>
     <td align="right"><%= @details['uptime'] %></td>
     <td align="right"><%= @details['poll'] %></td>
     <td align="right"><%= @details['host_status'] %></td>
