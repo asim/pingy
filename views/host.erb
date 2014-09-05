@@ -1,62 +1,73 @@
-<% if @host.empty? -%>
-No host data
-<% else %>
-<table class="tbl" width="100%">
-  <thead>
-    <th>hostname</th>
-    <th>ip</th>
-    <th>last update</th>
-    <th>uptime</th>
-    <th>poll</th>
-    <th>host status</th>
-    <th>service status</th>
-  </thead>
-  <tr class="<%= @details['host_status'] %>">
-    <td align="center"><a href="/host/<%= @ip %>"><%= @details['hostname'] %></a></td>
-    <td align="center"><%= @ip %></td>
-    <td align="center"><%= Time.parse(@details['last_update']).strftime("%Y-%m-%d %H:%M:%S") %></td>
-    <td align="right"><%= @details['uptime'] %></td>
-    <td align="right"><%= @details['poll'] %></td>
-    <td align="right"><%= @details['host_status'] %></td>
-    <td align="right"><%= @details['service_status'] %></td>
-  </tr>
-</table>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="page-header">
+      <h1 id="tables"><%= @details['hostname'] %></h1>
+    </div>
+  </div>
+</div>
 
-<br />
+<div class="row">
+  <div class="col-lg-12">
+    <% if @host.empty? -%>
+    No host data
+    <% else %>
+    <table class="table table-striped" width="100%">
+      <tr>
+        <th>IP</th>
+        <th>Last Update</th>
+        <th>Uptime</th>
+        <th><i class="fa fa-repeat"></i> &nbsp;Poll</th>
+        <th>Service Status</th>
+      </tr>
+      <tr class="<%= @details['host_status'] %>">
+        <td><%= @ip %></td>
+        <td><%= Time.parse(@details['last_update']).strftime("%Y-%m-%d %H:%M:%S") %></td>
+        <td><%= @details['uptime'] %></td>
+        <td><%= @details['poll'] %> seconds</td>
+        <td><%= @details['service_status'] %></td>
+      </tr>
+    </table>
+  </div>
+</div>
 
 <% @host['service'].each do |service| -%>
-<table class="tbl" width="100%">
-  <tr class="<%= service['status'] == "0" ? 'up' : 'down' %>">
-    <th align="left"><%= service['name'] %></th>
-    <th align="left"><%= service['status'] == '0' ? 'up' : 'down' %></th>
-  </tr>
-
-  <% service.each do |name,values| -%>
-  <% if name == 'name'; next; end %>
-  <% if values.class.to_s == 'Hash' %>
-  <tr><td><%= name %></td><td></td></tr>
-  <% values.each do |k,v| -%>
-  <tr>
-    <td><%= k %></td>
-    <td><%= v %></td>
-  </tr>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="panel panel-<%= service['status'] == '0' ? 'success' : 'danger' %>">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= service['name'] %></h3>
+      </div>
+      <div class="panel-body">
+        <table class="tiny-table table-striped table-hover" width="100%">
+          <% service.each do |name,values| -%>
+          <% if name == 'name'; next; end %>
+          <% if values.class.to_s == 'Hash' %>
+          <tr><td width="20%"><strong><%= name %></strong></td><td></td></tr>
+          <% values.each do |k,v| -%>
+          <tr>
+            <td width="20%">&nbsp;&nbsp;&nbsp;<%= k %></td>
+            <td><%= v %></td>
+          </tr>
+          <% end -%>
+          <% elsif values.class.to_s == 'Array' %>
+          <tr><td><strong><%= name %></strong></td><td></td></tr>
+          <% values.each do |v| -%>
+          <tr>
+            <td width="20%">&nbsp;&nbsp;&nbsp;<%= values.index(v) %></td>
+            <td><%= v %></td>
+          </tr>
+          <% end -%>
+          <% else %>
+          <tr>
+            <td width="20%"><%= name %></td>
+            <td><%= label(name, values) %></td>
+          <% end %>
+          </tr>
+          <% end -%>
+        </table>
+      </div>
+    </div>
+    <% end -%>
+  </div>
   <% end -%>
-  <% elsif values.class.to_s == 'Array' %>
-  <tr><td><%= name %></td><td></td></tr>
-  <% values.each do |v| -%>
-  <tr>
-    <td><%= values.index(v) %></td>
-    <td><%= v %></td>
-  </tr>
-  <% end -%>
-  <% else %>
-  <tr>
-    <td><%= name %></td>
-    <td><%= label(name, values) %></td>
-  <% end %>
-  </tr>
-  <% end -%>
-</table>
-<% end -%>
-<% end -%>
-
+</div>

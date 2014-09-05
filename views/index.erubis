@@ -1,28 +1,39 @@
-<% if @hosts.nil? -%>
-<p>There are no hosts currently monitored</p>
-<% else %>
-<table class="tbl" width="100%">
-  <tr>
-    <th>hostname</th>
-    <th>ip</th>
-    <th>last update</th>
-    <th>uptime</th>
-    <th>poll</th>
-    <th>host status</th>
-    <th>service status</th>
-  </tr>
-<% @hosts.each do |ip,details| -%>
-  <tr class="<%= details[:status] %>">
-    <td align="center"><a href="/host/<%= ip %>"><%= details['hostname'] %></a></td>
-    <td align="center"><%= ip %></td>
-    <td align="center"><%= Time.parse(details['last_update']).strftime("%Y-%m-%d %H:%M:%S") %></td>
-    <td align="right"><%= details['uptime'] %></td>
-    <td align="right"><%= details['poll'] %></td>
-    <td align="right"><%= details['host_status'] %></td>
-    <td align="right"><%= details['service_status'] %></td>
-  </tr>
-<% end -%>
-</table>
-<% end -%>
+<div class="row">
+  <div class="col-lg-12">
+    <div class="page-header">
+      <h1 id="tables">Hosts</h1>
+    </div>
+  </div>
+</div>
 
-
+<div class="row">
+  <div class="col-lg-12">
+    <% if @hosts.nil? -%>
+    <p>There are no hosts currently monitored</p>
+    <% else %>
+    <table class="table table-striped table-hover" width="100%">
+      <tr>
+        <th>Hostname</th>
+        <th>IP</th>
+        <th>Last Update</th>
+        <th>Uptime</th>
+        <th><i class="fa fa-repeat"></i> &nbsp;Poll</th>
+        <th>Service Status</th>
+      </tr>
+    <% @hosts.each do |ip,details| -%>
+      <tr class="<%= details[:status] %>">
+        <td>
+          <i class="fa fa-circle-thin host-status<%= details['host_status'] == 'up' ? ' up' : ' down' %>"></i>
+          <a href="/host/<%= ip %>"><%= details['hostname'] %></a>
+        </td>
+        <td><%= ip %></td>
+        <td><%= Time.parse(details['last_update']).strftime("%Y-%m-%d %H:%M:%S") %></td>
+        <td><%= details['uptime'] %></td>
+        <td><%= details['poll'] %> seconds</td>
+        <td><%= details['service_status'] %></td>
+      </tr>
+    <% end -%>
+    </table>
+    <% end -%>
+  </div>
+</div>

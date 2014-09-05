@@ -1,30 +1,38 @@
-<html><head><title>Pingy</title>
-<style type="text/css">
-body { font-family: arial, helvetica, sans-serif; font-size: 12px; font-weight: normal; color: black; background: white;}
-.ul { list-style: none; padding-left: 0;}
-th,td { font-size: 10px; align: center;}
-.hr {margin-top: 0.25em; border-color: black; border-bottom-style: solid;}
-table.tbl { border-collapse: collapse; border-style: none; table-layout:fixed;}
-table.tbl td { border-width: 1px 1px 1px 1px; border-style: solid solid solid solid; padding: 2px 3px; border-color: gray;}
-table.tbl th { border-width: 1px; border-style: solid solid solid solid; border-color: gray;}
-table.tbl th.pxname {background: #b00040; color: #ffff40; font-weight: bold; border-style: solid solid none solid; padding: 2px 3px; white-space: nowrap;}
-table.tbl th.empty { border-style: none; empty-cells: hide; background: white;}
-table.tbl th.desc { background: white; border-style: solid solid none solid; text-align: left; padding: 2px 3px;}
-.up	{background: #c0ffc0;}
-.down   {background: #ff9090;}
-</style>
+<html>
+<head>
+  <title>Pingy</title>
+  <link rel="stylesheet" href="/bootstrap.min.css" media="screen">
+  <link rel="stylesheet" href="/bootswatch.min.css" media="screen">
+  <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/custom.css" media="screen">
 </head>
 <body>
-<h1><a href="/">Pingy</a></h1>
-<hr width="100%" class="hr">
-<ul class="ul">
-<li><strong>pid</strong> <%= @info[:pid] %></li>
-<li><strong>uptime</strong> <%= @info[:uptime] %></li>
-<li><strong>started at</strong> <%= @info[:started_at].strftime("%H:%M:%S %d-%m-%Y") %></li>
-<li><strong>current time</strong> <%= Time.now.strftime("%H:%M:%S") %></li>
-</ul>
-<%= yield %>
-<p>&nbsp;</p>
-</body>
+
+<div class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <a href="/" class="navbar-brand">Pingy</a>
+      <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <div class="navbar-collapse collapse" id="navbar-main">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a>pid: <%= @info[:pid] %></a></li>
+        <li><a>uptime: <%= @info[:uptime] %></a></li>
+        <li><a>started at: <%= @info[:started_at].strftime("%H:%M:%S %d-%m-%Y") %></a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <%= yield %>
+</div>
+
 <script language="javascript" type="text/javascript">setTimeout("location.reload();",60000);</script>
+
+</body>
 </html>

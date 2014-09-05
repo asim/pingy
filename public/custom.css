@@ -1,0 +1,13 @@
+.host-status {
+  margin-right:10px;
+}
+.host-status.up {
+  color:#21B18A;
+}
+.host-status.down {
+  color:#DE352E;
+}
+.tiny-table td {
+  font-size:12px;
+  padding:2px;
+}

@@ -1,13 +1,14 @@
 # Pingy
 
-Pingy is a lightweight ruby read-only web ui in place of mmonit. 
+Pingy is a lightweight Ruby read-only web UI in place of mmonit. 
 
-Supports Monit v5.1.1 (tested)
+![Pingy Hosts](/public/pingy-hosts.png?raw=true "Pingy Hosts")
 
-## Release Notes
+![Pingy Host](/public/pingy-host.png?raw=true "Pingy Host")
 
-### 0.1.0
+Supports Monit v5.1.1
 
-* Switch Redis data from Marshall to JSON
-* Show service if only one available instream
+## Special Thanks
 
+* [Font Awesome](http://fortawesome.github.io/Font-Awesome/)
+* [Bootswatch Flatly Theme](http://bootswatch.com/flatly/)
