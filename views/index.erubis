@@ -11,29 +11,59 @@
     <% if @hosts.nil? -%>
     <p>There are no hosts currently monitored</p>
     <% else %>
-    <table class="table table-striped table-hover" width="100%">
-      <tr>
-        <th>Hostname</th>
-        <th>IP</th>
-        <th>Last Update</th>
-        <th>Uptime</th>
-        <th><i class="fa fa-repeat"></i> &nbsp;Poll</th>
-        <th>Service Status</th>
-      </tr>
-    <% @hosts.each do |ip,details| -%>
-      <tr class="<%= details[:status] %>">
-        <td>
-          <i class="fa fa-circle-thin host-status<%= details['host_status'] == 'up' ? ' up' : ' down' %>"></i>
-          <a href="/host/<%= ip %>"><%= details['hostname'] %></a>
-        </td>
-        <td><%= ip %></td>
-        <td><%= Time.parse(details['last_update']).strftime("%Y-%m-%d %H:%M:%S") %></td>
-        <td><%= details['uptime'] %></td>
-        <td><%= details['poll'] %> seconds</td>
-        <td><%= details['service_status'] %></td>
-      </tr>
-    <% end -%>
+    <table class="table table-striped table-hover" id="hosts" width="100%">
+      <thead>
+        <tr>
+          <th>Hostname</th>
+          <th>IP</th>
+          <th>Last Update</th>
+          <th>Uptime</th>
+          <th><i class="fa fa-repeat"></i> &nbsp;Poll</th>
+          <th>Service Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @hosts.each do |ip,details| -%>
+          <tr class="<%= details[:status] %>">
+            <td>
+              <i class="fa fa-circle-thin host-status<%= details['host_status'] == 'up' ? ' up' : ' down' %>"></i>
+              <a href="/host/<%= ip %>"><%= details['hostname'] %></a>
+            </td>
+            <td><%= ip %></td>
+            <td><%= Time.parse(details['last_update']).strftime("%Y-%m-%d %H:%M:%S") %></td>
+            <td><%= details['uptime'] %></td>
+            <td><%= details['poll'] %> seconds</td>
+            <td><%= details['service_status'] %></td>
+          </tr>
+        <% end -%>
+      </tbody>
+      <!--tfoot>
+        <tr>
+          <th>Hostname</th>
+          <th>IP</th>
+          <th>Last Update</th>
+          <th>Uptime</th>
+          <th>Poll</th>
+          <th>Service Status</th>
+        </tr>
+      </tfoot-->
     </table>
     <% end -%>
   </div>
 </div>
+
+<script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" language="javascript" src="http://cdn.datatables.net/1.10.2/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $('#hosts').dataTable({
+                            paging:     false,
+                            ordering:   true,
+                            info:       false,
+                            searching:  false,
+                            stateSave:  true
+    });
+
+    $('div.dataTables_filter input').addClass('form-control');
+  } );
+</script>

@@ -4,6 +4,7 @@
   <link rel="stylesheet" href="/bootstrap.min.css" media="screen">
   <link rel="stylesheet" href="/bootswatch.min.css" media="screen">
   <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.2/css/jquery.dataTables.css">
   <link rel="stylesheet" href="/custom.css" media="screen">
 </head>
 <body>
